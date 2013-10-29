@@ -103,7 +103,7 @@ class Drive {
      * @param right_speed speed from -100 to 100 for right motor
      * @since v1.0
      */
-    void tank_drive(uint8_t left_speed, uint8_t right_speed);
+    void tank_drive(int left_speed, int right_speed);
     /**
      * Drives motors by giving speeds for left and right motors individually
      * @param left_speed speed in micros pulse width for left motor
@@ -157,7 +157,7 @@ class Drive {
      * @return input restrained to -100 to 100
      * @since v1.0
      */
-    uint8_t restrain_limits(uint32_t speed);
+    int restrain_limits(int speed);
     /**
      * restrains input to valid range
      * @param speed input speed
@@ -173,7 +173,7 @@ class Drive {
      * @param is_micros if the speed inputs are pulse widths or not(-100 to 100)
      * @since v1.0
      */
-    void set_motors(uint16_t left_speed, uint16_t right_speed, bool is_micros);
+    void set_motors(int left_speed, int right_speed, bool is_micros);
     Servo _left_motor; //Left Wheel Servo object
     uint16_t _left_min; //Left Wheel min output (in microsmicros)
     uint16_t _left_stop; //Left Wheel stop output (in micros)

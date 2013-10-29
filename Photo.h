@@ -58,13 +58,13 @@ class Photo {
      * @reurn if the Photoresistor is over black or not
      * @since v1.0
      */
-    bool is_black();
+    bool is_on_black();
     /**
      * Checks if the Photoresistor is currently over white or not (black)
      * @reurn if the Photoresistor is over white or not
      * @since v1.0
      */
-    bool is_white();
+    bool is_on_white();
   private:
     uint8_t _pin; //Analog Arduino Pin for photoresistor
     uint16_t _white_threshold; //Threshold (>=) for white

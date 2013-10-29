@@ -31,7 +31,7 @@ void Photo::init(uint8_t pin, uint16_t black_threshold, uint16_t white_threshold
   _init = true;
 }
 
-bool Photo::is_black() {
+bool Photo::is_on_black() {
   if(!_init)
     return false;
   uint16_t reading = analogRead(_pin);
@@ -40,7 +40,7 @@ bool Photo::is_black() {
   return false;
 }
 
-bool Photo::is_white() {
+bool Photo::is_on_white() {
   if(!_init)
     return false;
   uint16_t reading = analogRead(_pin);

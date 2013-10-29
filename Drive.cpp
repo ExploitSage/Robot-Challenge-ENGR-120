@@ -56,13 +56,19 @@ void Drive::init(uint8_t left_pin, uint8_t right_pin, uint16_t left_min, uint16_
   _init = true;
 }
 
-void Drive::tank_drive(uint8_t left_speed, uint8_t right_speed) {
+void Drive::tank_drive(int left_speed, int right_speed) {
   if(!_init || !is_update_time()) //exits method if instance has not been initialized or the motors can't be set yet
     return;
-    
+    Serial.print("Left Tank: ");
+    Serial.println(left_speed);
+    Serial.print("Right Tank: ");
+    Serial.println(right_speed);
   left_speed = restrain_limits(left_speed);
   right_speed = restrain_limits(right_speed);
-  
+  Serial.print("Left Tank OUT: ");
+  Serial.println(left_speed);
+  Serial.print("Right Tank OUT: ");
+  Serial.println(right_speed);
   set_motors(left_speed, right_speed, false); //inputs are not in microseconds
 }
 
@@ -105,7 +111,7 @@ bool Drive::is_update_time() {
   return false;
 }
 
-uint8_t Drive::restrain_limits(uint32_t speed) {
+int Drive::restrain_limits(int speed) {
   if(speed > 100)
     speed = 100;
   else if(speed < -100)
@@ -129,10 +135,20 @@ uint16_t Drive::restrain_limits_micros(uint32_t speed, bool is_left) {
   return speed;
 }
 
-void Drive::set_motors(uint16_t left_speed, uint16_t right_speed, bool is_micros) {
+void Drive::set_motors(int left_speed, int right_speed, bool is_micros) {
   if(!is_micros) {
+    Serial.print("Left Input: ");
+    Serial.println(left_speed);
+    Serial.print("Right Input: ");
+    Serial.println(right_speed);
+    
     left_speed = map(left_speed, -100, 100, _left_min, _left_max); //-100 to 100 are valid abstract speed range
     right_speed = map(right_speed, -100, 100, _right_min, _right_max);
+    
+    Serial.print("Left Output: ");
+    Serial.println(left_speed);
+    Serial.print("Right Output: ");
+    Serial.println(right_speed);
   }
   _left_motor.writeMicroseconds(left_speed);
   _right_motor.writeMicroseconds(right_speed);
