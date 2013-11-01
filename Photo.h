@@ -65,6 +65,12 @@ class Photo {
      * @since v1.0
      */
     bool is_on_white();
+    /**
+     * outputs value of photoresistor
+     * @reurn analog value of photoresistor
+     * @since v1.0
+     */
+    uint16_t get_value();
   private:
     uint8_t _pin; //Analog Arduino Pin for photoresistor
     uint16_t _white_threshold; //Threshold (>=) for white

@@ -48,3 +48,7 @@ bool Photo::is_on_white() {
     return true;
   return false;
 }
+
+uint16_t Photo::get_value() {
+  return analogRead(_pin);
+}
