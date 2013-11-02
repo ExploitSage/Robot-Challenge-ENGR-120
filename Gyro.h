@@ -158,9 +158,9 @@ private:
   uint8_t _int1;
   uint8_t _int2;
   uint8_t _cs;
-  uint8_t _dps_per_raw; //for Convertion to degrees per second
+  float _dps_per_raw; //for Convertion to degrees per second
   int16_t _raw[3];
-  int16_t _dps[3];
+  double _dps[3];
   float _heading[3];
   int32_t _counter[3];
   int16_t _zero[3]; // Calibration, The center is zero, but the gyro always reports a small amount of rotation.

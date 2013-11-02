@@ -36,7 +36,7 @@ Gyro gyro;
 void setup() {
   Serial.begin(9600);
   drive_train.init(
-    7, 6, //Left, Right, Servo Pins
+    5, 4, //Left, Right, Servo Pins
     1300, 1500, 1700, //Left Reverse, Stop, Forward pulse widths
     1700, 1500, 1300 //Right Reverse, Stop, Forward pulse widths
   );
@@ -52,8 +52,9 @@ void setup() {
   mode_switch.init(
     4, 5, 6, 7 //pins for bits of slector switch
   );
+  delay(100);
   gyro.init(
-    9, 8, 10, S500 //pins and bandwidth for gyro
+    9, 8, 10, S250 //pins and bandwidth for gyro
   );
 }
 
@@ -91,7 +92,7 @@ void loop() {
   }
   delay(100);
   */
-  
+  /*
   if(center_photo.is_on_black()) {
     if(left_photo.is_on_black() && right_photo.is_on_white()) {
       for(int i = 0; i < 200; i++) {
@@ -116,5 +117,12 @@ void loop() {
         break;
     }
   }
-  
+  */
+  gyro.update();
+  gyro.update_heading();
+  if(gyro.get_heading_z() <80) {
+    drive_train.tank_drive(10, -10);
+  } else if(gyro.get_heading_z() >80) {
+    drive_train.tank_drive(-10, 10);
+  }
 }

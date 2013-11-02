@@ -25,19 +25,19 @@ void Gyro::init(uint8_t int1, uint8_t int2, uint8_t cs, uint8_t bandwidth) {
   digitalWrite(_cs, HIGH);
 
   // The WHO_AM_I register should identify 0xD3
-  if(read_register(WHO_AM_I)!=0xD3)
-    return;
+  //if(read_register(WHO_AM_I)!=0xD3)
+  //  return;
   
   // Enable x, y, z and turn off power down
   write_register(CTRL_REG1, 0b00011111);
   // Not using any filters
-  write_register(CTRL_REG2, 0b00000000);
+  //write_register(CTRL_REG2, 0b00000000);
   //Generate Data Ready Interrupt on INT2
   write_register(CTRL_REG3, 0b00001000);
   // CTRL_REG4 controls the full-scale range, among other things:
   write_register(CTRL_REG4, bandwidth);
   // Not using any filters
-  write_register(CTRL_REG5, 0b00000000);
+  //write_register(CTRL_REG5, 0b00000000);
   
   switch(bandwidth) {
     case S250:
@@ -45,6 +45,7 @@ void Gyro::init(uint8_t int1, uint8_t int2, uint8_t cs, uint8_t bandwidth) {
       break;
     case S500:
       _dps_per_raw = S500DPS;
+      Serial.println("Bandwidth: 500");
       break;
     case S2000:
       _dps_per_raw = S2000DPS;
@@ -78,8 +79,13 @@ void Gyro::calibrate() {
     _zero[i]=average_rate;
     
     // Per STM docs, a threshold for each axis is based on the standard deviation of the samples times 3.
-    _threshold[i]=sqrt((double(sigma[i]) / NUM_SAMPLES) - (average_rate * average_rate)) * SIGMA_MULTIPLE;    
+    _threshold[i]=sqrt((double(sigma[i]) / NUM_SAMPLES) - (average_rate * average_rate)) * 2;//SIGMA_MULTIPLE;    
   }
+  
+  Serial.print("z zero: ");
+  Serial.println(_zero[2]);
+  Serial.print("z threshold: ");
+  Serial.println(_threshold[2]);
 }
 
 void Gyro::update() {
@@ -132,7 +138,7 @@ float Gyro::get_heading_x() {return _heading[0];}
 float Gyro::get_heading_y() {return _heading[1];}
 float Gyro::get_heading_z() {return _heading[2];}
 
-uint64_t get_deltaT_micros() {
+uint64_t Gyro::get_deltaT_micros() {
   static uint64_t last_time=0; //consider making method field?
   
   uint64_t current_time=micros();
