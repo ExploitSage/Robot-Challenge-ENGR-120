@@ -64,19 +64,19 @@ void setup() {
       nano_chemical();
       break;
     case 0x2:
-      mechanical();
+      electrical_mechanical();
       break;
     case 0x3:
-      electrical();
-      break;
-    case 0x4:
       biomedical();
       break;
-    case 0x5:
+    case 0x4:
       civil();
       break;
-    case 0x6:
+    case 0x5:
       cyber();
+      break;
+    case 0x6:
+      
       break;
     case 0x7:
       
@@ -189,19 +189,43 @@ void nano_chemical() {
   forward(60);
 }
 
-void mechanical() {
+void electrical_mechanical() {
+  forward(20);
+  left_spin(15);
+  forward(100);
+  right_spin(15);
+  forward(45);
+  right_pivot(20);
+  forward(20);
+  right_pivot(20);
+  forward(60);
+  right_pivot(30);
+  forward(30);
+  backward(40);
+  right_spin(40);
+  forward(20);
+  left_pivot(20);
+  forward(50);
+  left_pivot(20);
   forward(70);
-  right_pivot(25);
-  forward(80);
-  left_pivot(60);
-}
-
-void electrical() {
-  
+  left_pivot(30);
+  forward(70);
 }
 
 void biomedical() {
-  
+  forward(20);
+  left_spin(15);
+  forward(100);
+  right_spin(15);
+  forward(45);
+  right_pivot(20);
+  forward(30);
+  right_spin(20);
+  forward(55); //DUCK IS PLACED!
+  backward(55);
+  right_spin(30);
+  forward(95);
+  right_spin(30);
 }
 
 void civil() {
