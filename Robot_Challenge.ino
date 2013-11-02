@@ -181,55 +181,61 @@ void loop() {
 }
 
 void nano_chemical() {
-  forward(60);
+  forward(90); //Duck Moved
   backward(60);
-  left_pivot(50);
-  forward(40);
+  left_pivot(45);
+  forward(40); //Duck Picked Up
   left_pivot(75);
-  forward(60);
+  forward(70);
 }
 
 void electrical_mechanical() {
-  forward(20);
+  forward(35);
   left_spin(15);
-  forward(100);
+  forward(110);
   right_spin(15);
   forward(45);
   right_pivot(20);
   forward(20);
   right_pivot(20);
   forward(60);
-  right_pivot(30);
-  forward(30);
-  backward(40);
-  right_spin(40);
-  forward(20);
-  left_pivot(20);
+  right_pivot(25);
+  forward(25); //Duck Placed
+  backward(45);
+  right_spin(35);
+  forward(20); //Duck Pi
+  //left_pivot(20);//Duck Picked Up
   forward(50);
   left_pivot(20);
   forward(70);
   left_pivot(30);
-  forward(70);
+  forward(80);
 }
 
 void biomedical() {
-  forward(20);
+  forward(35);
   left_spin(15);
-  forward(100);
+  forward(110);
   right_spin(15);
   forward(45);
   right_pivot(20);
   forward(30);
   right_spin(20);
-  forward(55); //DUCK IS PLACED!
-  backward(55);
+  forward(50); //Duck Placed
+  backward(50);
   right_spin(30);
   forward(95);
-  right_spin(30);
+  left_spin(20);
+  forward(180);
 }
 
 void civil() {
-  
+  forward(50);
+  left_pivot(15);
+  forward(20);
+  backward(20);
+  right_pivot(15);
+  backward(60);
 }
 
 void cyber() {
