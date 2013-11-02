@@ -50,15 +50,66 @@ void setup() {
     500, 600 //Black(<=), White(>=) thresholds
   );
   mode_switch.init(
-    4, 5, 6, 7 //pins for bits of slector switch
+    12, 10, 11, 9 //pins for bits of slector switch
   );
-  delay(100);
+  /*delay(100);
   gyro.init(
     9, 8, 10, S250 //pins and bandwidth for gyro
-  );
+  );*/
+  switch(mode_switch.get_position()) {
+    case 0x0:
+      //Do Nothing
+      break;
+    case 0x1:
+      nano_chemical();
+      break;
+    case 0x2:
+      mechanical();
+      break;
+    case 0x3:
+      electrical();
+      break;
+    case 0x4:
+      biomedical();
+      break;
+    case 0x5:
+      civil();
+      break;
+    case 0x6:
+      cyber();
+      break;
+    case 0x7:
+      
+      break;
+    case 0x8:
+      
+      break;
+    case 0x9:
+      
+      break;
+    case 0xA:
+      
+      break;
+    case 0xB:
+      
+      break;
+    case 0xC:
+      
+      break;
+    case 0xD:
+      
+      break;
+    case 0xE:
+      
+      break;
+    case 0xF:
+      
+      break;
+  }
 }
 
 void loop() {
+  
   /*
   Serial.print("Left: ");
   Serial.print(left_photo.get_value());
@@ -118,11 +169,95 @@ void loop() {
     }
   }
   */
-  gyro.update();
+  /*gyro.update();
   gyro.update_heading();
   if(gyro.get_heading_z() <80) {
     drive_train.tank_drive(10, -10);
   } else if(gyro.get_heading_z() >80) {
     drive_train.tank_drive(-10, 10);
+  }*/
+  
+  
+}
+
+void nano_chemical() {
+  forward(60);
+  backward(60);
+  left_pivot(50);
+  forward(40);
+  left_pivot(75);
+  forward(60);
+}
+
+void mechanical() {
+  forward(70);
+  right_pivot(25);
+  forward(80);
+  left_pivot(60);
+}
+
+void electrical() {
+  
+}
+
+void biomedical() {
+  
+}
+
+void civil() {
+  
+}
+
+void cyber() {
+  
+}
+
+
+
+void forward(uint16_t loops) {
+  for(int i = 0; i < loops; i++) {
+    drive_train.tank_drive(100, 100);
+    delay(20);
   }
+  drive_train.stop();
+}
+
+void left_pivot(uint16_t loops) {
+  for(int i = 0; i < loops; i++) {
+    drive_train.tank_drive(0, 100);
+    delay(20);
+  }
+  drive_train.stop();
+}
+
+void right_pivot(uint16_t loops) {
+  for(int i = 0; i < loops; i++) {
+    drive_train.tank_drive(100, 0);
+    delay(20);
+  }
+  drive_train.stop();
+}
+
+void left_spin(uint16_t loops) {
+  for(int i = 0; i < loops; i++) {
+    drive_train.tank_drive(-100, 100);
+    delay(20);
+  }
+  drive_train.stop();
+}
+
+void right_spin(uint16_t loops) {
+  for(int i = 0; i < loops; i++) {
+    drive_train.tank_drive(100, -100);
+    delay(20);
+  }
+  drive_train.stop();
+}
+
+void backward(uint16_t loops) {
+  for(int i = 0; i < loops; i++) {
+    drive_train.tank_drive(-100, -100);
+    delay(20);
+  }
+  drive_train.stop();
 }
