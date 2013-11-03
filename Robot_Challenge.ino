@@ -177,7 +177,7 @@ void civil() {
 
 void cyber() {
   forward(20);
-  if(center_photo.is_on_black()) {
+  if(center_photo.is_on_black() && (left_photo.is_on_white() || right_photo.is_on_white())) {
     forward();
   } else {
     if(left_photo.is_on_black() && right_photo.is_on_white()) {
@@ -186,18 +186,16 @@ void cyber() {
       right_spin();
     } else if(right_photo.is_on_black() && left_photo.is_on_black()) {
       drive_train.stop();
-    } else if(right_photo.is_on_white() && left_photo.is_on_white() {
+    } else if(right_photo.is_on_white() && left_photo.is_on_white()) {
       for(int i = 0; i < 20; i++) {
         if(center_photo.is_on_black())
-          break;
-        spin_right();
+          return;
+        right_spin();
       }
-      if(center_photo.is_on_black())
-        break;
       for(int i = 0; i < 40; i++) {
         if(center_photo.is_on_black())
-          break;
-        spin_left();
+          return;
+        left_spin();
       }
     }
   }
