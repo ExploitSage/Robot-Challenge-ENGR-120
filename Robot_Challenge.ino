@@ -31,26 +31,30 @@ Photo left_photo;
 Photo center_photo;
 Photo right_photo;
 Mode_Switch mode_switch;
-Gyro gyro;
+//Gyro gyro;
+
+uint8_t battery = 0;
+uint8_t indicator = 13;
+double threshold = 7.5;
 
 void setup() {
-  Serial.begin(9600);
+  pinMode(indicator, OUTPUT);
   drive_train.init(
     5, 4, //Left, Right, Servo Pins
     1300, 1500, 1700, //Left Reverse, Stop, Forward pulse widths
     1700, 1500, 1300 //Right Reverse, Stop, Forward pulse widths
   );
-  left_photo.init(0, //Analog Pin
+  left_photo.init(1, //Analog Pin
     500, 600 //Black(<=), White(>=) thresholds
   );
-  center_photo.init(1, //Analog Pin
+  center_photo.init(2, //Analog Pin
     500, 600 //Black(<=), White(>=) thresholds
   );
-  right_photo.init(2, //Analog Pin
+  right_photo.init(3, //Analog Pin
     500, 600 //Black(<=), White(>=) thresholds
   );
   mode_switch.init(
-    12, 10, 11, 9 //pins for bits of slector switch
+    11, 9, 10, 8 //pins for bits of slector switch
   );
   /*delay(100);
   gyro.init(
@@ -109,75 +113,8 @@ void setup() {
 }
 
 void loop() {
-  
-  /*
-  Serial.print("Left: ");
-  Serial.print(left_photo.get_value());
-  Serial.print(" : ");
-  if(left_photo.is_on_black()) {
-    Serial.println("Black");
-  } else if(left_photo.is_on_white()) {
-    Serial.println("White");
-  } else {
-    Serial.println("Gray");
-  }
-  Serial.print("Center: ");
-  Serial.print(center_photo.get_value() );
-  Serial.print(" : ");
-  if(center_photo.is_on_black()) {
-    Serial.println("Black");
-  } else if(center_photo.is_on_white()) {
-    Serial.println("White");
-  } else {
-    Serial.println("Gray");
-  }
-  Serial.print("Right: ");
-  Serial.print(right_photo.get_value());
-  Serial.print(" : ");
-  if(right_photo.is_on_black()) {
-    Serial.println("Black");
-  } else if(right_photo.is_on_white()) {
-    Serial.println("White");
-  } else {
-    Serial.println("Gray");
-  }
+  battery_check();
   delay(100);
-  */
-  /*
-  if(center_photo.is_on_black()) {
-    if(left_photo.is_on_black() && right_photo.is_on_white()) {
-      for(int i = 0; i < 200; i++) {
-        drive_train.tank_drive(-15, -10);
-      }
-    } else if(left_photo.is_on_white() && right_photo.is_on_black()) {
-      for(int i = 0; i < 5; i++) {
-        drive_train.tank_drive(-10, -15);
-      }
-    } else {
-      drive_train.tank_drive(25, 25);
-    }
-  } else {
-    for(int i = 0; i < 5; i++) {
-      drive_train.tank_drive(-10, -15);
-      if(center_photo.is_on_black())
-        break;
-    }
-    for(int i = 0; i < 400; i++) {
-      drive_train.tank_drive(-15, -10);
-      if(center_photo.is_on_black())
-        break;
-    }
-  }
-  */
-  /*gyro.update();
-  gyro.update_heading();
-  if(gyro.get_heading_z() <80) {
-    drive_train.tank_drive(10, -10);
-  } else if(gyro.get_heading_z() >80) {
-    drive_train.tank_drive(-10, 10);
-  }*/
-  
-  
 }
 
 void nano_chemical() {
@@ -203,7 +140,7 @@ void electrical_mechanical() {
   forward(25); //Duck Placed
   backward(45);
   right_spin(35);
-  forward(20); //Duck Pi
+  forward(20); //Duck Picked Up
   //left_pivot(20);//Duck Picked Up
   forward(50);
   left_pivot(20);
@@ -239,55 +176,98 @@ void civil() {
 }
 
 void cyber() {
-  
+  forward(20);
+  if(center_photo.is_on_black()) {
+    forward();
+  } else {
+    if(left_photo.is_on_black() && right_photo.is_on_white()) {
+      left_spin();
+    } else if(right_photo.is_on_black() && left_photo.is_on_white()) {
+      right_spin();
+    } else if(right_photo.is_on_black() && left_photo.is_on_black()) {
+      drive_train.stop();
+    } else if(right_photo.is_on_white() && left_photo.is_on_white() {
+      for(int i = 0; i < 20; i++) {
+        if(center_photo.is_on_black())
+          break;
+        spin_right();
+      }
+      if(center_photo.is_on_black())
+        break;
+      for(int i = 0; i < 40; i++) {
+        if(center_photo.is_on_black())
+          break;
+        spin_left();
+      }
+    }
+  }
 }
 
 
-
+void forward() {forward(1);}
 void forward(uint16_t loops) {
   for(int i = 0; i < loops; i++) {
     drive_train.tank_drive(100, 100);
+    battery_check();
     delay(20);
   }
   drive_train.stop();
 }
 
+void left_pivot() {left_pivot(1);}
 void left_pivot(uint16_t loops) {
   for(int i = 0; i < loops; i++) {
     drive_train.tank_drive(0, 100);
+    battery_check();
     delay(20);
   }
   drive_train.stop();
 }
 
+void right_pivot() {right_pivot(1);}
 void right_pivot(uint16_t loops) {
   for(int i = 0; i < loops; i++) {
     drive_train.tank_drive(100, 0);
+    battery_check();
     delay(20);
   }
   drive_train.stop();
 }
 
+void left_spin() {left_spin(1);}
 void left_spin(uint16_t loops) {
   for(int i = 0; i < loops; i++) {
     drive_train.tank_drive(-100, 100);
+    battery_check();
     delay(20);
   }
   drive_train.stop();
 }
 
+void right_spin() {right_spin(1);}
 void right_spin(uint16_t loops) {
   for(int i = 0; i < loops; i++) {
     drive_train.tank_drive(100, -100);
+    battery_check();
     delay(20);
   }
   drive_train.stop();
 }
 
+void backward() {backward(1);}
 void backward(uint16_t loops) {
   for(int i = 0; i < loops; i++) {
     drive_train.tank_drive(-100, -100);
+    battery_check();
     delay(20);
   }
   drive_train.stop();
+}
+
+void battery_check() {
+  double voltage = analogRead(battery)*0.004882813*2;
+  if(voltage < threshold)
+    digitalWrite(indicator, HIGH);
+  else
+    digitalWrite(indicator, LOW);
 }
