@@ -26,6 +26,9 @@
  * 12 GYRO (MOSI)
  * 13 GYRO (MISO)
  *****************************************/
+ #define LEFT_PIN 1
+ #define CENTER_PIN 2
+ #define RIGHT_PIN 3
 Drive drive_train;
 Photo left_photo;
 Photo center_photo;
@@ -38,6 +41,7 @@ uint8_t indicator = 13;
 double threshold = 7.5;
 
 void setup() {
+  Serial.begin(9600);
   pinMode(indicator, OUTPUT);
   drive_train.init(
     5, 4, //Left, Right, Servo Pins
@@ -45,13 +49,13 @@ void setup() {
     1700, 1500, 1300 //Right Reverse, Stop, Forward pulse widths
   );
   left_photo.init(1, //Analog Pin
-    500, 600 //Black(<=), White(>=) thresholds
+    150, 200 //Black(<=), White(>=) thresholds
   );
   center_photo.init(2, //Analog Pin
-    500, 600 //Black(<=), White(>=) thresholds
+    150, 200 //Black(<=), White(>=) thresholds
   );
   right_photo.init(3, //Analog Pin
-    500, 600 //Black(<=), White(>=) thresholds
+    150, 200 //Black(<=), White(>=) thresholds
   );
   mode_switch.init(
     11, 9, 10, 8 //pins for bits of slector switch
@@ -176,26 +180,47 @@ void civil() {
 }
 
 void cyber() {
-  forward(20);
-  if(center_photo.is_on_black() && (left_photo.is_on_white() || right_photo.is_on_white())) {
-    forward();
-  } else {
-    if(left_photo.is_on_black() && right_photo.is_on_white()) {
-      left_spin();
-    } else if(right_photo.is_on_black() && left_photo.is_on_white()) {
-      right_spin();
-    } else if(right_photo.is_on_black() && left_photo.is_on_black()) {
-      drive_train.stop();
-    } else if(right_photo.is_on_white() && left_photo.is_on_white()) {
-      for(int i = 0; i < 20; i++) {
-        if(center_photo.is_on_black())
-          return;
-        right_spin();
-      }
-      for(int i = 0; i < 40; i++) {
-        if(center_photo.is_on_black())
-          return;
-        left_spin();
+  int last_detect = 0;
+  forward(100);
+  while(true) {
+      /*
+      Serial.print("Left: ");
+      Serial.println(left_photo.get_value());
+      Serial.print("Center: ");
+      Serial.println(center_photo.get_value());
+      Serial.print("Right: ");
+      Serial.println(right_photo.get_value());
+      */
+    if(center_photo.is_on_black() && (left_photo.is_on_white() || right_photo.is_on_white())) {
+      drive_train.tank_drive(30, 30);
+    } else {
+      if(left_photo.is_on_black() && right_photo.is_on_white()) {
+        drive_train.tank_drive(10, 40);
+        last_detect = LEFT_PIN;
+      } else if(right_photo.is_on_black() && left_photo.is_on_white()) {
+        drive_train.tank_drive(40, 10);
+        last_detect = RIGHT_PIN;
+      } else if(right_photo.is_on_black() && left_photo.is_on_black()) {
+        drive_train.stop();
+      } else if(right_photo.is_on_white() && left_photo.is_on_white()) {
+        while(!(left_photo.is_on_black() || 
+           center_photo.is_on_black() ||
+           right_photo.is_on_black())) {
+          if(last_detect == LEFT_PIN) {
+            drive_train.tank_drive(-10, 10);
+          } else if(last_detect == RIGHT_PIN){
+            drive_train.tank_drive(10, -10);
+          } else {
+            drive_train.stop();
+          }
+        }
+        /*for(int i = 0; i < 30000; i++) {
+          if(left_photo.is_on_black() || 
+             center_photo.is_on_black() ||
+             right_photo.is_on_black())
+            break;
+          drive_train.tank_drive(-10, 10);
+        }*/
       }
     }
   }
