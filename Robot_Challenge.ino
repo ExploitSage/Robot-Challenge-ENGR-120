@@ -49,13 +49,13 @@ void setup() {
     1700, 1500, 1300 //Right Reverse, Stop, Forward pulse widths
   );
   left_photo.init(1, //Analog Pin
-    150, 200 //Black(<=), White(>=) thresholds
+    600, 850 //Black(<=), White(>=) thresholds
   );
   center_photo.init(2, //Analog Pin
-    150, 200 //Black(<=), White(>=) thresholds
+    600, 850 //Black(<=), White(>=) thresholds
   );
   right_photo.init(3, //Analog Pin
-    150, 200 //Black(<=), White(>=) thresholds
+    600, 850 //Black(<=), White(>=) thresholds
   );
   mode_switch.init(
     11, 9, 10, 8 //pins for bits of slector switch
@@ -82,36 +82,6 @@ void setup() {
       break;
     case 0x5:
       cyber();
-      break;
-    case 0x6:
-      
-      break;
-    case 0x7:
-      
-      break;
-    case 0x8:
-      
-      break;
-    case 0x9:
-      
-      break;
-    case 0xA:
-      
-      break;
-    case 0xB:
-      
-      break;
-    case 0xC:
-      
-      break;
-    case 0xD:
-      
-      break;
-    case 0xE:
-      
-      break;
-    case 0xF:
-      
       break;
   }
 }
@@ -183,6 +153,7 @@ void cyber() {
   int last_detect = 0;
   forward(100);
   while(true) {
+      battery_check();
       /*
       Serial.print("Left: ");
       Serial.println(left_photo.get_value());
