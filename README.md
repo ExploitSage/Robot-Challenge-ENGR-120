@@ -1,4 +1,2 @@
-Robot_Challenge
-===============
-
-My Code for the ENGR 120 Fall Quarter 2013 Robot Challenge.
+# Robot-Challenge-ENGR-120
+Arduino Sketch for autonomously driving project course collecting and positioning rubber ducks
